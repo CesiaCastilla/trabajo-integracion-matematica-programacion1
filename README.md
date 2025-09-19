@@ -8,6 +8,15 @@
 - **Nombre:** Chihuán Castilla, Cesia
 - **Comisión:** Ag25-1C-03
 
+- **Nombre:**
+- **Comisión:** Ag25-1C-03
+
+- **Nombre:**
+- **Comisión:** Ag25-1C-03
+
+- **Nombre:**
+- **Comisión:** Ag25-1C-03
+
 ## 📂 Descripción del Repositorio
 Este repositorio almacena el trabajo práctico de Integración de Matemática y Programación 1, realizado para la asignatura de **Matemática**.
 
