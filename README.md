@@ -8,7 +8,7 @@
 - **Nombre:** Chihuán Castilla, Cesia
 - **Comisión:** Ag25-1C-03
 
-- **Nombre:**
+- **Nombre:**Ezequiel colque
 - **Comisión:** Ag25-1C-03
 
 - **Nombre:**
