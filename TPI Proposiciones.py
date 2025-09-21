@@ -3,6 +3,8 @@ import math
 #print ("hola mundo")
 #ingreso de las variables logicas (proposiciones)
 
+
+
 #Logica/operaciones
 
 #Muestra de resultados
