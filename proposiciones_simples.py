@@ -19,6 +19,10 @@ else:
     implicación = 1
     print(f"p={p}, q={q} -> p => q es Verdadero")
 
+if implicación == 1:
+    reciproca = True
+    print(f"La reciproca de p => q es q => p es{reciproca}")
+    
 #La contrareciproca
 pneg = 1 - p
 qneg = 1 - q
