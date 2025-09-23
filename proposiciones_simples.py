@@ -15,14 +15,12 @@ while True:
 if p == 1 and q == 0:
     implicación = 0
     print(f"p={p} (Verdadero) y q={q} -> p => q es Falso")
+    print("La reciproca de p => q es q => p es Verdadera")
 else:
     implicación = 1
     print(f"p={p}, q={q} -> p => q es Verdadero")
+    print("La reciproca de p => q es q => p es Verdadera")
 
-if implicación == 1:
-    reciproca = True
-    print(f"La reciproca de p => q es q => p es{reciproca}")
-    
 #La contrareciproca
 pneg = 1 - p
 qneg = 1 - q
