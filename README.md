@@ -11,7 +11,7 @@
 
 - **Nombre:** Colque, Ezequiel
 
-- **Nombre:**
+- **Nombre:** Contreras, Leonel
 
 ## 📂 Descripción del Repositorio
 Este repositorio almacena el trabajo práctico de Integración de Matemática y Programación 1, realizado para la asignatura de **Matemática**.
