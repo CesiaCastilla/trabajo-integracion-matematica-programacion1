@@ -21,6 +21,12 @@ else:
     print(f"p={p}, q={q} -> p => q es Verdadero")
     print("La reciproca de p => q es q => p es Verdadera")
 
+#La reciproca
+if q == 1 and p == 0:
+    print("La recíproca q => p es Falsa")
+else:
+    print("La recíproca q => p es Verdadera")
+    
 #La contrareciproca
 pneg = 1 - p
 qneg = 1 - q
