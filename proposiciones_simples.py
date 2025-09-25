@@ -13,7 +13,7 @@ while True:
 
 #logica de la implicación
 if p == 1 and q == 0:
-    implicación = 0
+    implicacion = 0
     print(f"p={p} y q={q} -> p => q es Falso")
 else:
     implicacion = 1
