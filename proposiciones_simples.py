@@ -53,7 +53,7 @@ if implicacion == contrarreciproca:
 else:
     print("\nLas proposiciones NO son lógicamente equivalentes.")
 
-if implicación == reciproca:
+if implicacion == reciproca:
     print("\n¡Ambas proposiciones son lógicamente equivalentes!")
     print("Esto se conoce como equivalencia lógica o bicondicional.")
 else:
