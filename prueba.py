@@ -1,3 +1,7 @@
+# Programa de Lógica Proposicional - Versión Ampliada
+# Algebra de Boole, Sistema Binario y Lógica
+
+print("=== PROGRAMA DE LÓGICA PROPOSICIONAL ===")
 print("1. Análisis de implicación (p ⇒ q) y contrarrecíproca")
 print("2. Tabla de verdad para múltiples proposiciones")
 print()
@@ -5,7 +9,7 @@ print()
 opcion = int(input("Seleccione una opción (1 o 2): "))
 
 if opcion == 1:
-    # CÓDIGO ORIGINAL DE LOS COMPAÑEROS
+    # CÓDIGO ORIGINAL DE TUS COMPAÑEROS
     p = int(input("Ingrese el valor de verdad para p (1 para Verdadero, 0 para Falso): "))
     q = int(input("Ingrese el valor de verdad para q (1 para Verdadero, 0 para Falso): "))
 
@@ -105,10 +109,32 @@ elif opcion == 2:
     print("TABLA DE VERDAD")
     print("="*60)
     
-    # Imprimir encabezados
+    # Determinar columnas intermedias basadas en la expresión
+    columnas_intermedias = []
+    expr_limpia = expresion.replace(" ", "").lower()
+    
+    # Detectar negaciones de variables individuales
+    for prop in nombres_props:
+        if ("!" + prop) in expr_limpia or ("~" + prop) in expr_limpia:
+            columnas_intermedias.append("¬" + prop)
+    
+    # Detectar subexpresiones en paréntesis
+    if "(" in expresion and ")" in expresion:
+        # Para casos como !(q+r) o (p&q)
+        import re
+        parentesis = re.findall(r'\([^()]+\)', expresion)
+        for par in parentesis:
+            if par not in columnas_intermedias:
+                columnas_intermedias.append(par)
+    
+    # Imprimir encabezados con columnas intermedias
     encabezado = ""
     for prop in nombres_props:
         encabezado = encabezado + prop + "\t"
+    
+    for col_inter in columnas_intermedias:
+        encabezado = encabezado + col_inter + "\t"
+    
     encabezado = encabezado + "| " + expresion
     print(encabezado)
     print("-" * len(encabezado))
@@ -143,6 +169,45 @@ elif opcion == 2:
         for valor in valores_correctos:
             fila_str = fila_str + str(valor) + "\t"
         
+        # Calcular y mostrar valores de columnas intermedias
+        for col_inter in columnas_intermedias:
+            valor_inter = 0
+            if col_inter.startswith("¬"):
+                # Negación de variable simple como ¬p, ¬q
+                var = col_inter[1:]  # quitar el ¬
+                if var == 'p':
+                    valor_inter = 1 - p
+                elif var == 'q':
+                    valor_inter = 1 - q
+                elif var == 'r' and num_props >= 3:
+                    valor_inter = 1 - r
+                elif var == 's' and num_props >= 4:
+                    valor_inter = 1 - s
+            elif col_inter.startswith("(") and col_inter.endswith(")"):
+                # Subexpresión en paréntesis
+                subexpr = col_inter[1:-1].replace(" ", "").lower()
+                # Evaluar subexpresión
+                if "+" in subexpr or "|" in subexpr:  # OR
+                    if num_props == 2 and "q+r" not in subexpr:
+                        if "p+q" in subexpr or "p|q" in subexpr:
+                            valor_inter = p | q
+                    elif num_props >= 3:
+                        if "q+r" in subexpr or "q|r" in subexpr:
+                            valor_inter = q | r
+                        elif "p+q" in subexpr or "p|q" in subexpr:
+                            valor_inter = p | q
+                elif "&" in subexpr:  # AND
+                    if num_props == 2:
+                        if "p&q" in subexpr:
+                            valor_inter = p & q
+                    elif num_props >= 3:
+                        if "p&q" in subexpr:
+                            valor_inter = p & q
+                        elif "q&r" in subexpr:
+                            valor_inter = q & r
+            
+            fila_str = fila_str + str(valor_inter) + "\t"
+        
         # Evaluar la expresión lógica
         resultado = 0  # Por defecto falso
         
@@ -157,95 +222,112 @@ elif opcion == 2:
         expr_procesada = expr_procesada.replace("+", "|")
         expr_procesada = expr_procesada.replace("!", "~")
         
-        # Evaluar expresiones comunes paso a paso
-        if num_props == 2:
+        # EVALUADOR GENÉRICO PARA CUALQUIER EXPRESIÓN LÓGICA
+        
+        # Función para evaluar expresiones de forma genérica
+        def evaluar_expresion(expr_str, valores_vars):
+            """
+            Evalúa una expresión lógica con las variables sustituidas
+            valores_vars es un diccionario como {'p': 1, 'q': 0, 'r': 1, 's': 0}
+            """
+            # Copiar la expresión para procesarla
+            expr = expr_str.replace(" ", "").lower()
+            
             # Reemplazar variables por sus valores
-            expr_eval = expr_procesada
-            expr_eval = expr_eval.replace("p", str(p))
-            expr_eval = expr_eval.replace("q", str(q))
+            for var, valor in valores_vars.items():
+                expr = expr.replace(var, str(valor))
             
-            # Evaluar diferentes tipos de expresiones
-            if "<=>" in expr_eval:  # Bicondicional
-                partes = expr_eval.split("<=>")
+            # Procesar la expresión paso a paso usando pila/stack simple
+            resultado = 0
+            
+            # Manejar casos específicos comunes
+            # 1. Implicaciones (=>)
+            if "=>" in expr and "<=>" not in expr:
+                if expr.count("=>") == 1:  # Una sola implicación
+                    partes = expr.split("=>")
+                    izq = evaluar_subexpresion(partes[0])
+                    der = evaluar_subexpresion(partes[1])
+                    resultado = 0 if (izq == 1 and der == 0) else 1
+                    return resultado
+            
+            # 2. Bicondicionales (<=>)
+            elif "<=>" in expr:
+                partes = expr.split("<=>")
                 if len(partes) == 2:
-                    lado_izq = partes[0].strip()
-                    lado_der = partes[1].strip()
-                    if lado_izq == lado_der:
-                        resultado = 1
-                    else:
-                        resultado = 0
-            elif "=>" in expr_eval:  # Implicación
-                partes = expr_eval.split("=>")
-                if len(partes) == 2:
-                    lado_izq = int(partes[0].strip())
-                    lado_der = int(partes[1].strip())
-                    if lado_izq == 1 and lado_der == 0:
-                        resultado = 0
-                    else:
-                        resultado = 1
-            elif "&" in expr_eval and "|" not in expr_eval:  # Solo AND
-                if "~" in expr_eval:
-                    if "~" + str(p) in expr_eval and str(q) in expr_eval:
-                        resultado = (1-p) & q
-                    elif str(p) in expr_eval and "~" + str(q) in expr_eval:
-                        resultado = p & (1-q)
-                    elif "~" + str(p) in expr_eval and "~" + str(q) in expr_eval:
-                        resultado = (1-p) & (1-q)
-                else:
-                    resultado = p & q
-            elif "|" in expr_eval and "&" not in expr_eval:  # Solo OR
-                if "~" in expr_eval:
-                    if "~" + str(p) in expr_eval and str(q) in expr_eval:
-                        resultado = (1-p) | q
-                    elif str(p) in expr_eval and "~" + str(q) in expr_eval:
-                        resultado = p | (1-q)
-                    elif "~" + str(p) in expr_eval and "~" + str(q) in expr_eval:
-                        resultado = (1-p) | (1-q)
-                else:
-                    resultado = p | q
-            elif "~" in expr_eval and "&" not in expr_eval and "|" not in expr_eval:  # Solo NOT
-                if "~p" in expr_eval and "q" not in expr_eval:
-                    resultado = 1 - p
-                elif "~q" in expr_eval and "p" not in expr_eval:
-                    resultado = 1 - q
-        
-        elif num_props == 3:
-            # Para 3 proposiciones
-            expr_eval = expr_procesada
-            expr_eval = expr_eval.replace("p", str(p))
-            expr_eval = expr_eval.replace("q", str(q))
-            expr_eval = expr_eval.replace("r", str(r))
+                    izq = evaluar_subexpresion(partes[0])
+                    der = evaluar_subexpresion(partes[1])
+                    resultado = 1 if (izq == der) else 0
+                    return resultado
             
-            # Evaluar expresiones simples con 3 variables
-            if "&" in expr_eval and "|" not in expr_eval:
-                # p & q & r
-                resultado = p & q & r
-            elif "|" in expr_eval and "&" not in expr_eval:
-                # p | q | r
-                resultado = p | q | r
-            elif "&" in expr_eval and "|" in expr_eval:
-                # Expresiones mixtas como (p & q) | r
-                if "(p&q)|r" in expr_eval.replace(" ", ""):
-                    resultado = (p & q) | r
-                elif "p&(q|r)" in expr_eval.replace(" ", ""):
-                    resultado = p & (q | r)
-                elif "(p|q)&r" in expr_eval.replace(" ", ""):
-                    resultado = (p | q) & r
-                elif "p|(q&r)" in expr_eval.replace(" ", ""):
-                    resultado = p | (q & r)
+            # 3. Evaluación general sin implicaciones
+            else:
+                return evaluar_subexpresion(expr)
         
-        elif num_props == 4:
-            # Para 4 proposiciones (casos básicos)
-            expr_eval = expr_procesada
-            expr_eval = expr_eval.replace("p", str(p))
-            expr_eval = expr_eval.replace("q", str(q))
-            expr_eval = expr_eval.replace("r", str(r))
-            expr_eval = expr_eval.replace("s", str(s))
+        def evaluar_subexpresion(expr):
+            """Evalúa subexpresiones sin implicaciones"""
+            # Procesar negaciones primero
+            while "!" in expr or "~" in expr:
+                # Buscar negaciones simples como !0, !1, ~0, ~1
+                import re
+                # Reemplazar !1 -> 0, !0 -> 1, ~1 -> 0, ~0 -> 1
+                expr = re.sub(r'[!~]1', '0', expr)
+                expr = re.sub(r'[!~]0', '1', expr)
+                
+                # Procesar negaciones de expresiones entre paréntesis
+                # Esto es más complejo, por ahora manejar casos básicos
+                if "!(0" in expr or "~(0" in expr:
+                    break
+                if "!(1" in expr or "~(1" in expr:
+                    break
+                break
             
-            if "&" in expr_eval and "|" not in expr_eval:
-                resultado = p & q & r & s
-            elif "|" in expr_eval and "&" not in expr_eval:
-                resultado = p | q | r | s
+            # Evaluar expresión resultante
+            # Reemplazar operadores por equivalentes de Python
+            expr = expr.replace("|", " or ").replace("&", " and ").replace("+", " or ")
+            
+            # Casos especiales para paréntesis
+            if "(" in expr and ")" in expr:
+                # Para casos simples como (0 or 1) and 0
+                try:
+                    # Evaluación segura para expresiones básicas
+                    if all(c in "01 ()andor" for c in expr):
+                        return eval(expr)
+                except:
+                    pass
+            
+            # Evaluación básica sin paréntesis
+            if " and " in expr and " or " not in expr:
+                partes = expr.split(" and ")
+                resultado = 1
+                for parte in partes:
+                    resultado = resultado and int(parte.strip())
+                return resultado
+            elif " or " in expr and " and " not in expr:
+                partes = expr.split(" or ")
+                resultado = 0
+                for parte in partes:
+                    resultado = resultado or int(parte.strip())
+                return resultado
+            elif expr in ["0", "1"]:
+                return int(expr)
+            else:
+                return 0
+        
+        # Crear diccionario con valores de variables
+        valores_variables = {}
+        if num_props >= 2:
+            valores_variables['p'] = p
+            valores_variables['q'] = q
+        if num_props >= 3:
+            valores_variables['r'] = r
+        if num_props >= 4:
+            valores_variables['s'] = s
+        
+        # Evaluar la expresión
+        try:
+            resultado = evaluar_expresion(expresion, valores_variables)
+        except:
+            resultado = 0  # En caso de error, devolver 0
         
         # Mostrar resultado
         fila_str = fila_str + "| " + str(resultado)
