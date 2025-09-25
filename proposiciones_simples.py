@@ -47,7 +47,7 @@ print(f"Resultado de la implicación (p => q): {implicacion}")
 print(f"Resultado de la contrarrecíproca (q => p): {reciproca}")
 print(f"Resultado de la contrarrecíproca (~q => ~p): {contrarreciproca}")
 
-if implicación == contrarreciproca:
+if implicacion == contrarreciproca:
     print("\n¡Ambas proposiciones son lógicamente equivalentes!")
     print("Esto se conoce como el Principio de Contraposición en Lógica.")
 else:
