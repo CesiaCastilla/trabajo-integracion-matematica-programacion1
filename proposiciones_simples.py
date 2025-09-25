@@ -43,7 +43,7 @@ print(f"Resultado final de ~q => ~p: {contrarreciproca}")
 
 #Verificación de resultados
 print("\n--- Comparación de Resultados ---")
-print(f"Resultado de la implicación (p => q): {implicación}")
+print(f"Resultado de la implicación (p => q): {implicacion}")
 print(f"Resultado de la contrarrecíproca (q => p): {reciproca}")
 print(f"Resultado de la contrarrecíproca (~q => ~p): {contrarreciproca}")
 
