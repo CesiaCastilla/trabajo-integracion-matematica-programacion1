@@ -16,7 +16,7 @@ if p == 1 and q == 0:
     implicación = 0
     print(f"p={p} y q={q} -> p => q es Falso")
 else:
-    implicación = 1
+    implicacion = 1
     print(f"p={p}, q={q} -> p => q es Verdadero")
 
 #La reciproca
