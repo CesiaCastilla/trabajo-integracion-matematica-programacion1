@@ -13,7 +13,7 @@ if opcion == 1:
     p = int(input("Ingrese el valor de verdad para p (1 para Verdadero, 0 para Falso): "))
     q = int(input("Ingrese el valor de verdad para q (1 para Verdadero, 0 para Falso): "))
 
-    # verificación que cumplan la consición
+    # Verifica que cumplan la condición
     while True:
         if p not in [0, 1] or q not in [0, 1]:
             print("Los valores de verdad deben ser 0 o 1, vuelve a ingresarlos")
